@@ -9,7 +9,7 @@ None
 
 Dependencies
 ----------------
-None
+-  rethinkdb
 
 Commands
 ----------------
