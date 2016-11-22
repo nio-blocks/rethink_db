@@ -9,6 +9,8 @@ from .rethinkdb_base_block import RethinkDBBase
 class RethinkDBUpdate(RethinkDBBase):
 
     table = StringProperty(title="Table to update", default='test')
+    index_to_update = StringProperty(title="Table index to update",
+                                     default='test')
 
     def __init__(self):
         super().__init__()
@@ -25,10 +27,15 @@ class RethinkDBUpdate(RethinkDBBase):
     def process_signals(self, signals):
         for signal in signals:
             self.logger.info('Processing signal: {}'.format(signal))
+            self.update_table(signal)
         self.notify_signals(signals)
 
-    def update_table(self):
-        self._table.update()
+    def update_table(self, signal):
+        data = {
+            self.index_to_update(): signal.to_dict()[self.index_to_update()]
+        }
+
+        self._table.update(data).run(self._connection)
 
     def _set_table(self):
         """set _table to a table object tied to the current db"""
