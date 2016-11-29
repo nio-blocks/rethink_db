@@ -9,8 +9,8 @@ from nio.util.discovery import not_discoverable
 
 @command("Get server info", method="_get_server_info")
 @command("Reconnect to server", method="_reconnect_connection")
-@command("List of databases on server", method="_get_list_of_databases")
-@command("List of tables on current database", method="_get_list_of_tables")
+@command("List server databases", method="_get_list_of_databases")
+@command("List database tables", method="_get_list_of_tables")
 @not_discoverable
 class RethinkDBBase(Block):
 
@@ -26,7 +26,7 @@ class RethinkDBBase(Block):
 
     version = VersionProperty('1.0.0')
     host = StringProperty(title='Host', default='[[RETHINKDB_HOST]]')
-    port = IntProperty(title='Port', default=28015)
+    port = IntProperty(title='Port', default='[[RETHINKDB_PORT]]')
     database_name = StringProperty(title='DB name', default='test')
     connect_timeout = TimeDeltaProperty(title="Connect timeout",
                                         default={"seconds": 20},

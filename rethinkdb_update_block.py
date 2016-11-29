@@ -1,4 +1,3 @@
-from nio.properties import BoolProperty
 from nio.signal.base import Signal
 from nio.properties import (StringProperty, ListProperty, PropertyHolder,
                             Property)
