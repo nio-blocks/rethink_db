@@ -75,7 +75,7 @@ class RethinkDBBase(Block):
 
     def _close_connection(self):
         """close the current connection"""
-        self._connection.close()
+        self._connection.close(noreply_wait=False)
 
     def _get_server_info(self):
         """returns info about the current connected server"""
