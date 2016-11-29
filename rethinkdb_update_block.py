@@ -30,7 +30,7 @@ class RethinkDBUpdate(RethinkDBBase):
 
     def process_signals(self, signals):
         for signal in signals:
-            self.logger.debug('Processing signal: {}'.format(signal))
+            self.logger.debug('Update is Processing signal: {}'.format(signal))
             self.update_table(signal)
         self.notify_signals(signals)
 
@@ -40,32 +40,38 @@ class RethinkDBUpdate(RethinkDBBase):
         """
         data = signal.to_dict()
         filter_dict = {}
-        filters = (filter.key() for filter in self.filters())
 
-        for key in filters:
-            filter_dict.update({key: data[key]})
+        for key in (filter.key() for filter in self.filters()):
+            try:
+                filter_dict.update({key: data[key]})
+            except:
+                self.logger.exception('Filter "{}" was not found in the '
+                                      'incoming signal. Aborting update.'
+                                      .format(key))
+                return
 
-        self.logger.debug("Update using filters: {}".format(filter_dict))
-
+        self.logger.debug("Updating using filters: {}".format(filter_dict))
         field_filter = self._table.filter(filter_dict)
-        # rethink does not allow updating of id
-        data.pop('id')
+
+        # rethink does not allow updating of id.
+        if 'id' in data:
+            data.pop('id')
+
         result = field_filter.update(data).run(self._connection)
 
         self.logger.debug("Sent update request, result: {}".format(result))
 
-        # check for errors after the update request
         if result['errors'] > 0:
-            # collect all error results "first_error", "second_error", etc.
-            errors = [result[key] for key in result.keys() if '_error' in key]
-            self.logger.error('Error updating table: {}'.format(errors))
+            # only first error is collected
+            self.logger.error('Error updating table: {}'
+                              .format(result['first_error']))
         else:
             # if no errors, there should only be integer result fields, which
             # should sum to greater than 0 if anything was replaced, updated,
             # etc.
             if not sum(result.values()):
-                # if 0, it did nothing, which means that it found nothing to
-                # change with the given filters.
+                # if 0, it did nothing, which means that it found no matches
+                # with the given filters.
                 self.logger.debug('(no document fields matching given filters)')
 
         self.notify_signals(Signal(result))
