@@ -1,3 +1,5 @@
+from nio.properties import BoolProperty
+from nio.signal.base import Signal
 from nio.properties import (StringProperty, ListProperty, PropertyHolder,
                             Property)
 from nio.util.discovery import discoverable
@@ -13,7 +15,8 @@ class RethinkDBUpdate(RethinkDBBase):
 
     """a block for updating info in a RethinkDB table"""
 
-    table = StringProperty(title="Table to update", default='test')
+    table = StringProperty(title="Table to update", default='test',
+                           allow_none=False)
     filters = ListProperty(MatchItem, title='Match the following document keys',
                            default=[])
 
@@ -46,13 +49,27 @@ class RethinkDBUpdate(RethinkDBBase):
         self.logger.debug("Update using filters: {}".format(filter_dict))
 
         field_filter = self._table.filter(filter_dict)
+        # rethink does not allow updating of id
+        data.pop('id')
         result = field_filter.update(data).run(self._connection)
 
         self.logger.debug("Sent update request, result: {}".format(result))
-        if not sum(result.values()):
-            self.logger.debug('(no document fields matching given filters)')
 
-        self.notify_signals(result)
+        # check for errors after the update request
+        if result['errors'] > 0:
+            # collect all error results "first_error", "second_error", etc.
+            errors = [result[key] for key in result.keys() if '_error' in key]
+            self.logger.error('Error updating table: {}'.format(errors))
+        else:
+            # if no errors, there should only be integer result fields, which
+            # should sum to greater than 0 if anything was replaced, updated,
+            # etc.
+            if not sum(result.values()):
+                # if 0, it did nothing, which means that it found nothing to
+                # change with the given filters.
+                self.logger.debug('(no document fields matching given filters)')
+
+        self.notify_signals(Signal(result))
 
     def _set_table(self):
         """set _table to a table object tied to the current db"""
