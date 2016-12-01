@@ -41,11 +41,6 @@ sample signal:
       'id': 'f25e058d-8164-4f7d-9546-6b26944c9828',
       'test': 200,
       'job_number': 2, 
-      },
-  'old_val': {
-      'id': 'f25e058d-8164-4f7d-9546-6b26944c9828', 
-      'test': 100, 
-      'job_number': 2, 
       }
 }
 ```
