@@ -46,8 +46,6 @@ class RethinkDBBase(Block):
     def configure(self, context):
         super().configure(context)
         self._connect_to_db()
-        self._get_list_of_databases()
-        self._get_list_of_tables()
 
     def stop(self):
         self.logger.info('closing RethinkDB connection...')
@@ -75,7 +73,7 @@ class RethinkDBBase(Block):
 
     def _close_connection(self):
         """close the current connection"""
-        self._connection.close(noreply_wait=False)
+        self._connection.close(noreply_wait=True)
 
     def _get_server_info(self):
         """returns info about the current connected server"""
