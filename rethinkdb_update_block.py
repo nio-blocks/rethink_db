@@ -34,7 +34,8 @@ class RethinkDBUpdate(RethinkDBBase):
             self.logger.debug('Update is Processing signal: {}'.format(signal))
             output_signals.append(Signal(self.update_table(signal)))
 
-        self.notify_signals(signals.extend(output_signals))
+        signals.extend(output_signals)
+        self.notify_signals(signals)
 
     def update_table(self, signal):
         """filter by given fields and update the correct document in the
