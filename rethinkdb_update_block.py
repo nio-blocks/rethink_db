@@ -29,10 +29,12 @@ class RethinkDBUpdate(RethinkDBBase):
         self._set_table()
 
     def process_signals(self, signals):
+        output_signals = []
         for signal in signals:
             self.logger.debug('Update is Processing signal: {}'.format(signal))
-            self.update_table(signal)
-        self.notify_signals(signals)
+            output_signals.append(Signal(self.update_table(signal)))
+
+        self.notify_signals(signals.extend(output_signals))
 
     def update_table(self, signal):
         """filter by given fields and update the correct document in the
@@ -74,7 +76,7 @@ class RethinkDBUpdate(RethinkDBBase):
                 # with the given filters.
                 self.logger.debug('(no document fields matching given filters)')
 
-        self.notify_signals(Signal(result))
+        return result
 
     def _set_table(self):
         """set _table to a table object tied to the current db"""
