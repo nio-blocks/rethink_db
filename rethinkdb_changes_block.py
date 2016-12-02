@@ -1,6 +1,7 @@
 from nio.properties import StringProperty
 from nio.signal.base import Signal
 from nio.util.threading import spawn
+from rethinkdb.net import DefaultCursorEmpty
 
 from .rethinkdb_base_block import RethinkDBBase
 
@@ -42,7 +43,7 @@ class RethinkDBChanges(RethinkDBBase):
             try:
                 change = self._change_feed.next(wait=True)
             except:
-                if 'empty' in self._change_feed.error:
+                if isinstance(self._change_feed.error, DefaultCursorEmpty):
                     # block is shutting down
                     pass
                 else:
@@ -50,7 +51,7 @@ class RethinkDBChanges(RethinkDBBase):
                     self.logger.exception('Could not get change.')
                 break
             else:
-                self.logger.debug(change)
+                self.logger.debug('Change: {}'.format(change))
                 self.notify_signals(Signal(change['new_val']))
 
     def _set_table(self):
