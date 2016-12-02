@@ -1,24 +1,91 @@
-# Block Template
+# RethinkDB 
 
-This repository serves as a "starter" repository for creating a new block.
-
-## How to use
-
-### Get the block template
-
- 1. Fork this repository into your own block
- 1. Clone this repository and rename the folder
+Blocks for communicating with and monitoring a RethinkDB server.
 
 
-### Rename the appropriate files
+## RethinkDBChanges
 
- 1. Rename `example_block.py` to whatever your block name will be. We like to keep `_block` at the end of filenames that contain blocks.
- 1. In your new block Python file, rename the class to the new block's name. Do **not** put `Block` in the class name - this is implied.
- 1. Rename `test_example_block.py` to match your new block's class name. Always submit accompanying unit tests in the `tests` folder.
- 1. Rename `BLOCK_README.md` to `README.md` and update the documentation accordingly.
+Properties
+--------------
+-  table: name of the table to watch in the current database
+-  host: server host ip, defaults to env variable
+-  port: server host port, defaults to env variable
+-  database_name: name of database on the server
+-  connect_timeout: amount of time to wait to connect before dropping
+
+Dependencies
+----------------
+-  rethinkdb
+
+Commands
+----------------
+-  Get server info: Gets information about the current connected RethinkDB server
+-  Reconnect to server: Reconnects to the last connected RethinkDB server
+-  List server databases: List all databases on the current connected server
+-  List database tables: List all tables in the current database
+
+Input
+-------
+None
+
+Output
+---------
+Any changes that are pushed to the table that this block is watching. 
+This can be an insertion or update to a document in the table.
+
+sample signal: 
+
+```
+{
+  'new_val': {
+      'id': 'f25e058d-8164-4f7d-9546-6b26944c9828',
+      'test': 200,
+      'job_number': 2, 
+      }
+}
+```
 
 
-## File Reference
+## RethinkDBUpdate
 
- * **example_block.py** : This is the block code. Additional Python classes and files are definitely welcome. If the file contains a Block class, make sure the filename ends with `_block.py`. If the file represents a Base Block that is not discoverable by itself, have the filename end with `_base.py`.
- * **requirements.txt** : List out any Python dependencies this block requires. This file will be installed by pip when the block is installed. The command for installing the dependencies is `pip install -r requirements.txt`.
+Properties
+--------------
+-  table: name of the table to watch in the current database
+-  host: server host ip, defaults to env variable
+-  port: server host port, defaults to env variable
+-  database_name: name of database on the server
+-  connect_timeout: amount of time to wait to connect before dropping
+-  filters: control which documents are matched and updated based on these strings
+
+Dependencies
+----------------
+-  rethinkdb
+
+Commands
+----------------
+-  Get server info: Gets information about the current connected RethinkDB server
+-  Reconnect to server: Reconnects to the last connected RethinkDB server
+-  List server databases: List all databases on the current connected server
+-  List database tables: List all tables in the current database
+
+Input
+-------
+Any list of signals. This block expects incoming signals to have attributes
+that are matched with filters and will exist in the table. 
+
+Output
+---------
+The result of the update request to the server. 
+
+sample signal: 
+
+```
+{
+  'errors': 0,
+  'unchanged': 0, 
+  'inserted': 0,
+  'skipped': 0, 
+  'deleted': 0,
+  'replaced': 1
+}
+```
