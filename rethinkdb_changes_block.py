@@ -35,11 +35,19 @@ class RethinkDBChanges(RethinkDBBase):
         self.logger.debug('change feed: {}'.format(self._change_feed))
 
         while True:
+            # wait for the next change. If the block is shutting down, change
+            # will return an error, which will end the wait loop. An error such
+            # as a connection error will also end this event loop. If no
+            # exception, notify the change.
             try:
                 change = self._change_feed.next(wait=True)
             except:
-                self.logger.exception('Could not get change (ignore if this '
-                                      'block is stopping)')
+                if 'empty' in self._change_feed.error:
+                    # block is shutting down
+                    pass
+                else:
+                    # a different error
+                    self.logger.exception('Could not get change.')
                 break
             else:
                 self.logger.debug(change)
