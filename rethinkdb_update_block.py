@@ -1,3 +1,4 @@
+from nio.block.mixins.enrich.enrich_signals import EnrichSignals
 from nio.signal.base import Signal
 from nio.properties import (StringProperty, ListProperty, PropertyHolder,
                             Property)
@@ -10,7 +11,7 @@ class MatchItem(PropertyHolder):
 
 
 @discoverable
-class RethinkDBUpdate(RethinkDBBase):
+class RethinkDBUpdate(RethinkDBBase, EnrichSignals):
 
     """a block for updating info in a RethinkDB table"""
 
@@ -29,13 +30,17 @@ class RethinkDBUpdate(RethinkDBBase):
         self._set_table()
 
     def process_signals(self, signals):
-        output_signals = []
+        notify_list = []
         for signal in signals:
             self.logger.debug('Update is Processing signal: {}'.format(signal))
-            output_signals.append(Signal(self.update_table(signal)))
 
-        signals.extend(output_signals)
-        self.notify_signals(signals)
+            # update incoming signals with results of the update
+            result = self.update_table(signal)
+            out_sig = self.get_output_signal(result, signal)
+            self.logger.debug(out_sig)
+            notify_list.append(out_sig)
+
+        self.notify_signals(notify_list)
 
     def update_table(self, signal):
         """filter by given fields and update the correct document in the
