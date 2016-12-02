@@ -31,14 +31,15 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
     def test_process_signals(self, mocked_connection):
         blk = RethinkDBUpdate()
         self.configure_block(blk, {'port': 8888,
-                                   'host': '127.0.0.1'})
-        blk.update_table = MagicMock(return_value={})
+                                   'host': '127.0.0.1',
+                                   'exclude_existing': False})
+        blk.update_table = MagicMock(return_value={'result': 1})
         blk.start()
         blk.process_signals([Signal({'test': 1})])
         blk.stop()
         self.assertEqual(blk.update_table.call_count, 1)
         # original input signal and output signal
-        self.assert_num_signals_notified(2)
+        self.assert_num_signals_notified(1)
 
 
 @skip
