@@ -19,6 +19,9 @@ class RethinkDBUpdate(RethinkDBBase, EnrichSignals):
                            allow_none=False)
     filters = ListProperty(MatchItem, title='Match the following document keys',
                            default=[])
+    object = Property(title='Dictionary data to update',
+                      default='{{ $.to_dict() }}',
+                      allow_none=False)
 
     def __init__(self):
         super().__init__()
@@ -46,12 +49,12 @@ class RethinkDBUpdate(RethinkDBBase, EnrichSignals):
         """filter by given fields and update the correct document in the
         table
         """
-        data = signal.to_dict()
+        data = self.object(signal)
         filter_dict = {}
 
         for key in (filter.key() for filter in self.filters()):
             try:
-                filter_dict.update({key: data[key]})
+                filter_dict.update({key: signal.to_dict()[key]})
             except:
                 self.logger.exception('Filter "{}" was not found in the '
                                       'incoming signal. Aborting update.'
