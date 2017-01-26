@@ -23,6 +23,9 @@ class RethinkDBChanges(RethinkDBBase):
     def configure(self, context):
         super().configure(context)
         self._set_table()
+
+    def start(self):
+        super().start()
         self._watch_thread = spawn(self.watch_for_changes)
 
     def stop(self):
