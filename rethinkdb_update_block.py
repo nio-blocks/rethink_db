@@ -1,5 +1,4 @@
 from nio.block.mixins.enrich.enrich_signals import EnrichSignals
-from nio.signal.base import Signal
 from nio.properties import (StringProperty, ListProperty, PropertyHolder,
                             Property)
 from nio.util.discovery import discoverable
