@@ -35,10 +35,10 @@ class RethinkDBCursor(RethinkDBBase, EnrichSignals):
             self.logger.debug('Cursor is Processing signal: {}'.format(signal))
 
             # update incoming signals with results of the query
-            result = self.query_table(signal)
-            out_sig = self.get_output_signal(result, signal)
-            self.logger.debug(out_sig)
-            notify_list.append(out_sig)
+            results = self.query_table(signal)
+            for result in results:
+                out_sig = self.get_output_signal(result, signal)
+                notify_list.append(out_sig)
 
         self.notify_signals(notify_list)
 
@@ -48,16 +48,10 @@ class RethinkDBCursor(RethinkDBBase, EnrichSignals):
 
         self.logger.debug("Querying using filter: {}".format(filter))
 
-        # do a loop or process all at once?
-        for item in cursor:
-            pass
         results = list(cursor)
-
         cursor.close()
 
-        self.logger.debug(results)
-
-        return {}
+        return results
 
     def _set_table(self):
         """set _table to a table object tied to the current db"""
