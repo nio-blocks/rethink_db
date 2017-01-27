@@ -17,8 +17,9 @@ class RethinkDBUpdate(RethinkDBBase, EnrichSignals):
 
     table = StringProperty(title="Table to update", default='test',
                            allow_none=False)
-    filters = ListProperty(MatchItem, title='Match the following document keys',
-                           default=[])
+    filter = Property(title='Filter dictionary',
+                      default='{{ {"id": $id} }}',
+                      allow_none=False)
     object = Property(title='Dictionary data to update',
                       default='{{ $.to_dict() }}',
                       allow_none=False)
@@ -50,25 +51,14 @@ class RethinkDBUpdate(RethinkDBBase, EnrichSignals):
         table
         """
         data = self.object(signal)
-        filter_dict = {}
-
-        for key in (filter.key() for filter in self.filters()):
-            try:
-                filter_dict.update({key: signal.to_dict()[key]})
-            except:
-                self.logger.exception('Filter "{}" was not found in the '
-                                      'incoming signal. Aborting update.'
-                                      .format(key))
-                return
-
-        self.logger.debug("Updating using filters: {}".format(filter_dict))
-        field_filter = self._table.filter(filter_dict)
-
         # rethink does not allow updating of id.
         if 'id' in data:
             data.pop('id')
+        filter_dict = self.filter(signal)
+        self.logger.debug("Updating using filters: {}".format(filter_dict))
 
-        result = field_filter.update(data).run(self._connection)
+        result = \
+            self._table.filter(filter_dict).update(data).run(self._connection)
 
         self.logger.debug("Sent update request, result: {}".format(result))
 
