@@ -4,10 +4,6 @@ from nio.util.discovery import discoverable
 from .rethinkdb_base_block import RethinkDBBase
 
 
-class MatchItem(PropertyHolder):
-    key = Property(title='Match key')
-
-
 @discoverable
 class RethinkDBCursor(RethinkDBBase, EnrichSignals):
 
@@ -22,7 +18,7 @@ class RethinkDBCursor(RethinkDBBase, EnrichSignals):
 
     def __init__(self):
         super().__init__()
-        # current table being updated
+        # current table being queried
         self._table = None
 
     def configure(self, context):
