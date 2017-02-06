@@ -47,7 +47,7 @@ class RethinkDBUpdate(RethinkDBBase, EnrichSignals):
                 db=self.database_name(),
                 timeout=self.connect_timeout().total_seconds()) as conn:
             result = rdb.db(self.database_name()).table(self.table()).\
-                update(data).run(conn)
+                filter(self.filter(signal)).update(data).run(conn)
         self.logger.debug("Sent update request, result: {}".format(result))
         if result['errors'] > 0:
             # only first error is collected
