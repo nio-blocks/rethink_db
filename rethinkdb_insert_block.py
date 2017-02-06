@@ -1,9 +1,9 @@
+import rethinkdb as rdb
 from enum import Enum
-
+from threading import Lock
 from nio.block.mixins import EnrichSignals
 from nio.properties import StringProperty, Property, SelectProperty
 from nio.util.discovery import discoverable
-
 from .rethinkdb_base_block import RethinkDBBase
 
 
@@ -26,40 +26,31 @@ class RethinkDBInsert(RethinkDBBase, EnrichSignals):
     conflict = SelectProperty(ConflictBehavior, title='Conflict behavior',
                               default=ConflictBehavior.error)
 
-    def __init__(self):
-        super().__init__()
-        # current table being inserted into
-        self._table = None
-
-    def configure(self, context):
-        super().configure(context)
-        self._set_table()
-
-    def process_signals(self, signals):
+    def _locked_process_signals(self, signals):
         notify_list = []
+        self.logger.debug('length of signals: {}'.format(len(signals)))
         for signal in signals:
             self.logger.debug('Insert is Processing signal: {}'.format(signal))
-
             # update incoming signals with results of the insert
-            result = self.insert(signal)
+            result = self.execute_with_retry(self._insert, signal)
             out_sig = self.get_output_signal(result, signal)
             self.logger.debug(out_sig)
             notify_list.append(out_sig)
-
         self.notify_signals(notify_list)
 
-    def insert(self, signal):
-        """filter by given fields and insert the correct document in the
-        table
-        """
+    def _insert(self, signal):
+        """filter by given fields and insert the document in the table"""
         data = self.object(signal)
-
-        insert_result = self._table.insert(data, conflict=self.conflict().value) \
-            .run(self._connection)
-
+        with rdb.connect(
+                host=self.host(),
+                port=self.port(),
+                db=self.database_name(),
+                timeout=self.connect_timeout().total_seconds()) as conn:
+            insert_result = \
+                rdb.db(self.database_name()).table(self.table()).insert(
+                    data, conflict=self.conflict().value).run(conn)
         self.logger.debug("Sent insert request, result: {}"
                           .format(insert_result))
-
         if insert_result['errors'] > 0:
             # only first error is collected
             self.logger.error('Error inserting into table: {}'
@@ -72,9 +63,4 @@ class RethinkDBInsert(RethinkDBBase, EnrichSignals):
                        if isinstance(value, int)):
                 # nothing changed
                 self.logger.debug('nothing to be inserted')
-
         return insert_result
-
-    def _set_table(self):
-        """set _table to a table object tied to the current db"""
-        self._table = self._db.table(self.table())
