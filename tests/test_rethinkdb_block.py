@@ -15,7 +15,8 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
                                    'exclude_existing': False})
         blk.update_table = MagicMock(return_value={'result': 1})
         blk.start()
-        with patch('blocks.rethink_db.rethinkdb_update_block.rdb') as mock_rdb:
+        import pdb; pdb.set_trace()
+        with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.update.return_value.\
                 run.return_value = {"errors": 0}
             blk.process_signals([Signal({'test': 1})])
@@ -48,7 +49,7 @@ class TestRethinkDBChangesBlock(NIOBlockTestCase):
                 from rethinkdb.net import DefaultCursorEmpty
                 self.mock_change_feed.error = DefaultCursorEmpty()
                 raise Exception
-        with patch('blocks.rethink_db.rethinkdb_changes_block.rdb') as mock_rdb:
+        with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.changes.return_value.\
                 run.return_value.next.side_effect = change_feed
             self.mock_change_feed = mock_rdb.db.return_value.\
