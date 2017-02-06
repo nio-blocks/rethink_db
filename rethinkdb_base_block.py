@@ -1,8 +1,6 @@
 import rethinkdb as rdb
 from nio.block.base import Block
 from nio.block.mixins import Retry, LimitLock
-from nio.block.mixins import EnrichSignals, LimitLock
-from nio.command import command
 from nio.properties import (IntProperty, StringProperty, VersionProperty,
                             TimeDeltaProperty)
 from nio.util.discovery import not_discoverable

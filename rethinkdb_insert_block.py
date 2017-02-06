@@ -1,6 +1,5 @@
 import rethinkdb as rdb
 from enum import Enum
-from threading import Lock
 from nio.block.mixins import EnrichSignals
 from nio.properties import StringProperty, Property, SelectProperty
 from nio.util.discovery import discoverable
