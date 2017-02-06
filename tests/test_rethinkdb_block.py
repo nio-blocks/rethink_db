@@ -15,7 +15,6 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
                                    'exclude_existing': False})
         blk.update_table = MagicMock(return_value={'result': 1})
         blk.start()
-        import pdb; pdb.set_trace()
         with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.update.return_value.\
                 run.return_value = {"errors": 0}
