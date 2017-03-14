@@ -23,9 +23,16 @@ class RethinkDBFilter(RethinkDBBase, EnrichSignals):
             self.logger.debug('Filter is Processing signal: {}'.format(signal))
             # update incoming signals with results of the query
             results = self.execute_with_retry(self._filter, signal)
-            for result in results:
-                out_sig = self.get_output_signal(result, signal)
+            if results:
+                for result in results:
+                    out_sig = self.get_output_signal(result, signal)
+                    notify_list.append(out_sig)
+            else:
+                # always notify a signal. still append empty results to
+                # enriched signals
+                out_sig = self.get_output_signal(results, signal)
                 notify_list.append(out_sig)
+
         self.notify_signals(notify_list)
 
     def _filter(self, signal):
