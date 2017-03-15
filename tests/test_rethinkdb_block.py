@@ -1,7 +1,6 @@
 from unittest.mock import patch, MagicMock
 from nio.signal.base import Signal
 from nio.testing.block_test_case import NIOBlockTestCase
-from ..rethinkdb_base_block import RethinkDBBase
 from ..rethinkdb_changes_block import RethinkDBChanges
 from ..rethinkdb_update_block import RethinkDBUpdate
 
@@ -16,9 +15,9 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
         blk.update_table = MagicMock(return_value={'result': 1})
         blk.start()
         with patch(blk.__module__ + '.rdb') as mock_rdb:
-            mock_rdb.db.return_value.table.return_value.update.return_value.\
-                run.return_value = {"errors": 0}
-            blk.process_signals([Signal({'test': 1})])
+            mock_rdb.db.return_value.table.return_value.filter.return_value.\
+                update.return_value.run.return_value = {"errors": 0}
+            blk.process_signals([Signal({'id': 1, 'test': 1})])
         blk.stop()
         # original input signal and output signal
         self.assert_num_signals_notified(1)
