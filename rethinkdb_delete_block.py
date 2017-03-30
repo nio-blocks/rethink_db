@@ -40,7 +40,7 @@ class RethinkDBDelete(RethinkDBBase):
                 filter(self.filter(signal)).delete(return_changes=True).\
                 run(conn)
 
-        if not hasattr(results, "new_val") or not results["deleted"]:
+        if results["deleted"] == 0:
             self.logger.debug("Unable to delete document for signal: {}"
                               .format(signal))
 
