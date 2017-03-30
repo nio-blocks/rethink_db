@@ -1,4 +1,3 @@
-import rethinkdb as rdb
 from nio.block.base import Block
 from nio.block.mixins import Retry, LimitLock
 from nio.properties import (IntProperty, StringProperty, VersionProperty,
