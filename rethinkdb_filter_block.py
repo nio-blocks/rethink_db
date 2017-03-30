@@ -6,7 +6,7 @@ from .rethinkdb_base_block import RethinkDBBase
 
 
 @discoverable
-class RethinkDBFilter(RethinkDBBase, EnrichSignals):
+class RethinkDBFilter(EnrichSignals, RethinkDBBase):
 
     """a block for querying a rethinkdb table and adding results onto
     incoming signals"""

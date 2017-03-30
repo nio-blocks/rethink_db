@@ -10,7 +10,7 @@ class MatchItem(PropertyHolder):
 
 
 @discoverable
-class RethinkDBUpdate(RethinkDBBase, EnrichSignals):
+class RethinkDBUpdate(EnrichSignals, RethinkDBBase):
 
     """a block for updating info in a RethinkDB table"""
 

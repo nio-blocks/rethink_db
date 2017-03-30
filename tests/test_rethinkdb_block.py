@@ -73,12 +73,14 @@ class TestRethinkDBDeleteBlock(NIOBlockTestCase):
         with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.filter.return_value.\
                 delete.return_value.run.return_value = {"errors": 0,
-                                                        "changes": {}}
+                                                        "changes": {},
+                                                        "deleted": 1}
             blk.process_signals([Signal({'id': 1, 'test': 1})])
         blk.stop()
 
         self.assert_num_signals_notified(1)
         self.assertDictEqual(self.last_signal_notified().to_dict(), {
             "errors": 0,
-            "changes": {}
+            "changes": {},
+            "deleted": 1
         })

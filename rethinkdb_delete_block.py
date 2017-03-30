@@ -1,12 +1,12 @@
 import rethinkdb as rdb
+from nio.block.mixins import EnrichSignals
 from nio.properties import StringProperty, Property
 from nio.util.discovery import discoverable
 from .rethinkdb_base_block import RethinkDBBase
-from nio.signal.base import Signal
 
 
 @discoverable
-class RethinkDBDelete(RethinkDBBase):
+class RethinkDBDelete(EnrichSignals, RethinkDBBase):
 
     """a block for deleting one or more documents from a rethinkdb table"""
 
@@ -23,7 +23,9 @@ class RethinkDBDelete(RethinkDBBase):
             # update incoming signals with results of the query
             delete_results = self.execute_with_retry(self._delete, signal)
             self.logger.debug("Delete results: {}".format(delete_results))
-            notify_list.append(Signal(delete_results))
+            out_sig = self.get_output_signal(delete_results, signal)
+            notify_list.append(out_sig)
+
         self.notify_signals(notify_list)
 
     def _delete(self, signal):
