@@ -13,7 +13,7 @@ class ConflictBehavior(Enum):
 
 
 @discoverable
-class RethinkDBInsert(RethinkDBBase, EnrichSignals):
+class RethinkDBInsert(EnrichSignals, RethinkDBBase):
 
     """a block for updating info in a RethinkDB table"""
 
