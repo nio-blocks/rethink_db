@@ -39,7 +39,7 @@ class RethinkDBDelete(EnrichSignals, RethinkDBBase):
             # as well as changes. If the delete was successful, 'new_val' will
             # be none in changes.
             results = rdb.db(self.database_name()).table(self.table()).\
-                filter(self.filter(signal)).delete(return_changes=True).\
+                get(self.filter(signal)["id"]).delete(return_changes=True).\
                 run(conn)
 
         if results["deleted"] == 0:
