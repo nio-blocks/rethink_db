@@ -38,8 +38,10 @@ class RethinkDBDelete(EnrichSignals, RethinkDBBase):
             # this will return the typical deleted, errors, unchanges, etc.
             # as well as changes. If the delete was successful, 'new_val' will
             # be none in changes.
+
+            # can't just run .get(), need to check if primary key is only filter condition
             results = rdb.db(self.database_name()).table(self.table()).\
-                get(self.filter(signal)["id"]).delete(return_changes=True).\
+                filter(self.filter(signal)).delete(return_changes=True).\
                 run(conn)
 
         if results["deleted"] == 0:

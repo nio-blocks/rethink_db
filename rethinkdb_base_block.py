@@ -31,3 +31,5 @@ class RethinkDBBase(LimitLock, Retry, Block):
 
     def _locked_process_signals(self, signals):
         pass
+
+    # def check_is_primary_key

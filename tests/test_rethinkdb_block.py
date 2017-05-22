@@ -13,9 +13,15 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
         self.configure_block(blk, {'port': 8888,
                                    'host': '127.0.0.1',
                                    'exclude_existing': False})
+        self.table_config = {
+            "primary_key": "id"
+        }
+
         blk.update_table = MagicMock(return_value={'result': 1})
         blk.start()
         with patch(blk.__module__ + '.rdb') as mock_rdb:
+            mock_rdb.db.return_value.table.return_value.\
+                config.return_value = self.table_config
             mock_rdb.db.return_value.table.return_value.get.return_value.\
                 update.return_value.run.return_value = {"errors": 0}
             blk.process_signals([Signal({'id': 1, 'test': 1})])
@@ -27,11 +33,13 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
         })
 
 
+
 class TestRethinkDBChangesBlock(NIOBlockTestCase):
 
     def test_gets_changes(self):
         blk = RethinkDBChanges()
         self.configure_block(blk, {'port': 8888, 'host': '127.0.0.1'})
+
         d = {'new_val': {'test_val': 1}}
         from threading import Event
         self.feed_complete = Event()
@@ -68,10 +76,15 @@ class TestRethinkDBDeleteBlock(NIOBlockTestCase):
         blk = RethinkDBDelete()
         self.configure_block(blk, {'port': 8888,
                                    'host': '127.0.0.1'})
+        self.table_config = {
+            "primary_key": "id"
+        }
 
         blk.start()
         with patch(blk.__module__ + '.rdb') as mock_rdb:
-            mock_rdb.db.return_value.table.return_value.get.return_value.\
+            mock_rdb.db.return_value.table.return_value.\
+                config.side_effect = self.table_config
+            mock_rdb.db.return_value.table.return_value.filter.return_value.\
                 delete.return_value.run.return_value = {"errors": 0,
                                                         "changes": {},
                                                         "deleted": 1}
