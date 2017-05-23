@@ -44,8 +44,6 @@ class RethinkDBDelete(EnrichSignals, RethinkDBBase):
                 config()
             primary_key = [table_config["primary_key"]]
             filter_condition = self.filter(signal)
-            print('primary_key = ', primary_key)
-            print('filter_condition = ', filter_condition)
 
             # Check if filter condition is only primary key, if so, use
             # .get rather than .filter for better performance

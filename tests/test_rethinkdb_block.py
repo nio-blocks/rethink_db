@@ -4,6 +4,7 @@ from nio.testing.block_test_case import NIOBlockTestCase
 from ..rethinkdb_changes_block import RethinkDBChanges
 from ..rethinkdb_update_block import RethinkDBUpdate
 from ..rethinkdb_delete_block import RethinkDBDelete
+from ..rethinkdb_filter_block import RethinkDBFilter
 
 
 class TestRethinkDBUpdateBlock(NIOBlockTestCase):
@@ -31,10 +32,6 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
         self.assertDictEqual(self.last_signal_notified().to_dict(), {
             "errors": 0,
         })
-        # filter_conditions != {id:1, test:1}, filter_conditions = {id:1}
-            # should use self.object(signal), self.filter(signal) uses default
-                # should I make change?
-            # the list() was giving primary_key = [i,d], so was giving false pass
 
     def test_process_signals_using_get(self):
         blk = RethinkDBUpdate()
@@ -151,3 +148,50 @@ class TestRethinkDBDeleteBlock(NIOBlockTestCase):
             "changes": {},
             "deleted": 1
         })
+
+
+class TestRethinkDBFilterBlock(NIOBlockTestCase):
+
+    def test_process_signals(self):
+        blk = RethinkDBFilter()
+        self.configure_block(blk, {'port': 8888,
+                                   'host': '127.0.0.1'})
+        self.table_config = {
+            "primary_key": "id"
+        }
+
+        blk.start()
+        with patch(blk.__module__ + '.rdb') as mock_rdb:
+            mock_rdb.db.return_value.table.return_value.\
+                config.return_value = self.table_config
+            mock_rdb.db.return_value.table.return_value.filter.return_value.\
+                run.return_value = [{"id": 8, 'test': 7, 'test1': 7},
+                                    {'id': 8, 'test': 7, 'test2': 6},
+                                    {"id": 8, 'test': 7, 'test3': 5}]
+            blk.process_signals([Signal({'id': 8, 'test': 7})])
+        blk.stop()
+        # original input signal and output signal
+        self.assert_num_signals_notified(3)
+        self.assertEqual(self.last_signal_notified().to_dict(), {"id": 8, 'test': 7, 'test3': 5})
+
+    def test_process_signals_using_get(self):
+        blk = RethinkDBFilter()
+        self.configure_block(blk, {'port': 8888,
+                                   'host': '127.0.0.1'})
+        self.table_config = {
+            "primary_key": "id"
+        }
+
+        blk.start()
+        with patch(blk.__module__ + '.rdb') as mock_rdb:
+            mock_rdb.db.return_value.table.return_value.\
+                config.return_value = self.table_config
+            mock_rdb.db.return_value.table.return_value.get.return_value.\
+                run.return_value = [{"id": 8, 'test': 7, 'test1': 7},
+                                    {'id': 8, 'test': 7, 'test2': 6},
+                                    {"id": 8, 'test': 7, 'test3': 5}]
+            blk.process_signals([Signal({'id': 8})])
+        blk.stop()
+        # original input signal and output signal
+        self.assert_num_signals_notified(3)
+        self.assertEqual(self.last_signal_notified().to_dict(), {"id": 8, 'test': 7, 'test3': 5})
