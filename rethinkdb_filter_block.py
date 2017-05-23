@@ -1,8 +1,12 @@
 import rethinkdb as rdb
+from rethinkdb import ReqlNonExistenceError
+from .rethinkdb_base_block import RethinkDBBase
+
+
 from nio.block.mixins.enrich.enrich_signals import EnrichSignals
 from nio.properties import StringProperty, Property
 from nio.util.discovery import discoverable
-from .rethinkdb_base_block import RethinkDBBase
+
 
 
 @discoverable
@@ -41,11 +45,17 @@ class RethinkDBFilter(EnrichSignals, RethinkDBBase):
                 port=self.port(),
                 db=self.database_name(),
                 timeout=self.connect_timeout().total_seconds()) as conn:
-            cursor = rdb.db(self.database_name()).table(self.table()).\
-                filter(self.filter(signal)).run(conn)
+            try:
+                cursor = rdb.db(self.database_name()).table(self.table()).\
+                    filter(self.filter(signal)).run(conn)
+            except ReqlNonExistenceError:
+                self.logger.exception("Table was found to be empty, "
+                                      "returning an empty dictionary")
+                return [{}]
+
             results = list(cursor)
             cursor.close()
         self.logger.debug(
-            "Querying using filter {} return results {}".format(
+            "Queried using filter {} return results {}".format(
                 self.filter(signal), results))
         return results
