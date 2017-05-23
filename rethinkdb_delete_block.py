@@ -42,12 +42,14 @@ class RethinkDBDelete(EnrichSignals, RethinkDBBase):
             # Query table configuration to get primary key
             table_config = rdb.db(self.database_name()).table(self.table()).\
                 config()
-            primary_key = table_config["primary_key"]
+            primary_key = [table_config["primary_key"]]
             filter_condition = self.filter(signal)
+            print('primary_key = ', primary_key)
+            print('filter_condition = ', filter_condition)
 
             # Check if filter condition is only primary key, if so, use
             # .get rather than .filter for better performance
-            if list(filter_condition.keys()) == list(primary_key):
+            if list(filter_condition.keys()) == primary_key:
                 results = rdb.db(self.database_name()).table(self.table()). \
                     get(filter_condition).delete(return_changes=True). \
                     run(conn)

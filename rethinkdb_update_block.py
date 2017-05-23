@@ -17,7 +17,7 @@ class RethinkDBUpdate(EnrichSignals, RethinkDBBase):
     table = StringProperty(title="Table to update", default='test',
                            allow_none=False)
     filter = Property(title='Filter dictionary',
-                      default='{{ {"id": $id} }}',
+                      default='{{ $.to_dict() }}',
                       allow_none=False)
     object = Property(title='Dictionary data to update',
                       default='{{ $.to_dict() }}',
@@ -49,12 +49,12 @@ class RethinkDBUpdate(EnrichSignals, RethinkDBBase):
             # Query table configuration to get primary key
             table_config = rdb.db(self.database_name()).table(self.table()).\
                 config()
-            primary_key = table_config["primary_key"]
+            primary_key = [table_config["primary_key"]]
             filter_condition = self.filter(signal)
 
             # Check if filter condition is only primary key, if so, use
             # .get rather than .filter for better performance
-            if list(filter_condition.keys()) == list(primary_key):
+            if list(filter_condition.keys()) == primary_key:
                 result = rdb.db(self.database_name()).table(self.table()).\
                     get(filter_condition).update(data).run(conn)
             else:

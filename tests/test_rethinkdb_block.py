@@ -31,7 +31,35 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
         self.assertDictEqual(self.last_signal_notified().to_dict(), {
             "errors": 0,
         })
+        # filter_conditions != {id:1, test:1}, filter_conditions = {id:1}
+            # should use self.object(signal), self.filter(signal) uses default
+                # should I make change?
+            # the list() was giving primary_key = [i,d], so was giving false pass
 
+    def test_process_signals_using_get(self):
+        blk = RethinkDBUpdate()
+        self.configure_block(blk, {'port': 8888,
+                                   'host': '127.0.0.1',
+                                   'exclude_existing': False})
+        self.table_config = {
+            "primary_key": "id"
+        }
+
+        blk.update_table = MagicMock(return_value={'result': 1})
+        blk.start()
+        with patch(blk.__module__ + '.rdb') as mock_rdb:
+            mock_rdb.db.return_value.table.return_value.\
+                config.return_value = self.table_config
+            # mock .get() rather than .filter()
+            mock_rdb.db.return_value.table.return_value.get.return_value.\
+                update.return_value.run.return_value = {"errors": 0}
+            blk.process_signals([Signal({'id': 1})])
+        blk.stop()
+        # original input signal and output signal
+        self.assert_num_signals_notified(1)
+        self.assertDictEqual(self.last_signal_notified().to_dict(), {
+            "errors": 0,
+        })
 
 
 class TestRethinkDBChangesBlock(NIOBlockTestCase):
@@ -89,6 +117,32 @@ class TestRethinkDBDeleteBlock(NIOBlockTestCase):
                                                         "changes": {},
                                                         "deleted": 1}
             blk.process_signals([Signal({'id': 1, 'test': 1})])
+        blk.stop()
+
+        self.assert_num_signals_notified(1)
+        self.assertDictEqual(self.last_signal_notified().to_dict(), {
+            "errors": 0,
+            "changes": {},
+            "deleted": 1
+        })
+
+    def test_process_signals_using_get(self):
+        blk = RethinkDBDelete()
+        self.configure_block(blk, {'port': 8888,
+                                   'host': '127.0.0.1'})
+        self.table_config = {
+            "primary_key": "id"
+        }
+
+        blk.start()
+        with patch(blk.__module__ + '.rdb') as mock_rdb:
+            mock_rdb.db.return_value.table.return_value.\
+                config.return_value = self.table_config
+            mock_rdb.db.return_value.table.return_value.get.return_value. \
+                delete.return_value.run.return_value = {"errors": 0,
+                                                        "changes": {},
+                                                        "deleted": 1}
+            blk.process_signals([Signal({'id': 1})])
         blk.stop()
 
         self.assert_num_signals_notified(1)
