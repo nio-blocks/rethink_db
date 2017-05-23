@@ -5,6 +5,7 @@ from ..rethinkdb_changes_block import RethinkDBChanges
 from ..rethinkdb_update_block import RethinkDBUpdate
 from ..rethinkdb_delete_block import RethinkDBDelete
 from ..rethinkdb_filter_block import RethinkDBFilter
+from ..rethinkdb_insert_block import RethinkDBInsert
 
 
 class TestRethinkDBUpdateBlock(NIOBlockTestCase):
@@ -172,7 +173,10 @@ class TestRethinkDBFilterBlock(NIOBlockTestCase):
         blk.stop()
         # original input signal and output signal
         self.assert_num_signals_notified(3)
-        self.assertEqual(self.last_signal_notified().to_dict(), {"id": 8, 'test': 7, 'test3': 5})
+        self.assertDictEqual(self.last_signal_notified().to_dict(), {
+            'id': 8,
+            'test': 7,
+            'test3': 5})
 
     def test_process_signals_using_get(self):
         blk = RethinkDBFilter()
@@ -194,4 +198,23 @@ class TestRethinkDBFilterBlock(NIOBlockTestCase):
         blk.stop()
         # original input signal and output signal
         self.assert_num_signals_notified(3)
-        self.assertEqual(self.last_signal_notified().to_dict(), {"id": 8, 'test': 7, 'test3': 5})
+        self.assertDictEqual(self.last_signal_notified().to_dict(), {
+            'id': 8,
+            'test': 7,
+            'test3': 5})
+
+
+class TestRethinkDBInsertBlock(NIOBlockTestCase):
+
+    def test_process_signal(self):
+        blk = RethinkDBInsert()
+        self.configure_block(blk, {'port': 8888, 'host': '127.0.0.1'})
+        blk.start()
+        with patch(blk.__module__ + '.rdb') as mock_rdb:
+            mock_rdb.db.return_value.table.return_value.insert.return_value.\
+                run.return_value = {"errors": 0}
+            blk.process_signals([Signal({'id': 1, 'test': 1})])
+        blk.stop()
+        self.assert_num_signals_notified(1)
+        self.assertDictEqual(self.last_signal_notified().to_dict(), {
+            "errors": 0})
