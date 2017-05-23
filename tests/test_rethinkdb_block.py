@@ -1,12 +1,9 @@
 from unittest.mock import patch, MagicMock
 from nio.signal.base import Signal
 from nio.testing.block_test_case import NIOBlockTestCase
-from rethinkdb import ReqlNonExistenceError
-
 from ..rethinkdb_changes_block import RethinkDBChanges
 from ..rethinkdb_update_block import RethinkDBUpdate
 from ..rethinkdb_delete_block import RethinkDBDelete
-from ..rethinkdb_filter_block import RethinkDBFilter
 
 
 class TestRethinkDBUpdateBlock(NIOBlockTestCase):
@@ -87,24 +84,3 @@ class TestRethinkDBDeleteBlock(NIOBlockTestCase):
             "changes": {},
             "deleted": 1
         })
-
-
-class TestRethinkDBFilterBlock (NIOBlockTestCase):
-
-    def test_empty_table(self):
-        blk = RethinkDBFilter()
-        self.configure_block(blk, {'port': 8888,
-                                   'host': '127.0.0.1'})
-
-        blk.start()
-        with patch(blk.__module__ + '.rdb') as mock_rdb:
-            mock_rdb.db.return_value.table.return_value.filter.return_value.\
-                run.side_effect = ReqlNonExistenceError('empty table')
-
-            blk.process_signals([Signal({'id': 1})])
-        blk.stop()
-
-        self.assert_num_signals_notified(1)
-        # Because test returns an empty dictionary we know it hit the empty
-        # table logic
-        self.assertDictEqual(self.last_signal_notified().to_dict(), {})
