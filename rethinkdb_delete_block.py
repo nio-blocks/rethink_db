@@ -39,10 +39,22 @@ class RethinkDBDelete(EnrichSignals, RethinkDBBase):
             # as well as changes. If the delete was successful, 'new_val' will
             # be none in changes.
 
-            # can't just run .get(), need to check if primary key is only filter condition
-            results = rdb.db(self.database_name()).table(self.table()).\
-                filter(self.filter(signal)).delete(return_changes=True).\
-                run(conn)
+            # Query table configuration to get primary key
+            table_config = rdb.db(self.database_name()).table(self.table()).\
+                config()
+            primary_key = table_config["primary_key"]
+            filter_condition = self.filter(signal)
+
+            # Check if filter condition is only primary key, if so, use
+            # .get rather than .filter for better performance
+            if list(filter_condition.keys()) == list(primary_key):
+                results = rdb.db(self.database_name()).table(self.table()). \
+                    get(filter_condition).delete(return_changes=True). \
+                    run(conn)
+            else:
+                results = rdb.db(self.database_name()).table(self.table()).\
+                    filter(self.filter(signal)).delete(return_changes=True).\
+                    run(conn)
 
         if results["deleted"] == 0:
             self.logger.debug("Unable to delete document for signal: {}"

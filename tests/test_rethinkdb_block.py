@@ -22,7 +22,7 @@ class TestRethinkDBUpdateBlock(NIOBlockTestCase):
         with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.\
                 config.return_value = self.table_config
-            mock_rdb.db.return_value.table.return_value.get.return_value.\
+            mock_rdb.db.return_value.table.return_value.filter.return_value.\
                 update.return_value.run.return_value = {"errors": 0}
             blk.process_signals([Signal({'id': 1, 'test': 1})])
         blk.stop()
@@ -83,8 +83,8 @@ class TestRethinkDBDeleteBlock(NIOBlockTestCase):
         blk.start()
         with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.\
-                config.side_effect = self.table_config
-            mock_rdb.db.return_value.table.return_value.filter.return_value.\
+                config.return_value = self.table_config
+            mock_rdb.db.return_value.table.return_value.filter.return_value. \
                 delete.return_value.run.return_value = {"errors": 0,
                                                         "changes": {},
                                                         "deleted": 1}

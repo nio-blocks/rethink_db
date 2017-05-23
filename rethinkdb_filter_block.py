@@ -42,13 +42,14 @@ class RethinkDBFilter(EnrichSignals, RethinkDBBase):
                 db=self.database_name(),
                 timeout=self.connect_timeout().total_seconds()) as conn:
 
-            # How to test that primary_key is referenced correctly?
-            # Won't race conditions btwn .config() and .filter() be possible?
+            # Query table configuration to get primary key
             table_config = rdb.db(self.database_name()).table(self.table()).\
                 config()
             primary_key = [table_config["primary_key"]]
-
             filter_condition = self.filter(signal)
+
+            # Check if filter condition is only primary key, if so, use
+            # .get rather than .filter for better performance
             if list(filter_condition.keys()) == list(primary_key):
                 cursor = rdb.db(self.database_name()).table(self.table()).\
                     get(filter_condition).run(conn)

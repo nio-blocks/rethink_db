@@ -45,18 +45,22 @@ class RethinkDBUpdate(EnrichSignals, RethinkDBBase):
                 port=self.port(),
                 db=self.database_name(),
                 timeout=self.connect_timeout().total_seconds()) as conn:
+
+            # Query table configuration to get primary key
             table_config = rdb.db(self.database_name()).table(self.table()).\
                 config()
-            primary_key = [table_config["primary_key"]]
-            print('******************', table_config["primary_key"])
-
+            primary_key = table_config["primary_key"]
             filter_condition = self.filter(signal)
+
+            # Check if filter condition is only primary key, if so, use
+            # .get rather than .filter for better performance
             if list(filter_condition.keys()) == list(primary_key):
                 result = rdb.db(self.database_name()).table(self.table()).\
                     get(filter_condition).update(data).run(conn)
             else:
                 result = rdb.db(self.database_name()).table(self.table()).\
                     filter(self.filter(signal)).update(data).run(conn)
+
         self.logger.debug("Sent update request, result: {}".format(result))
         if result['errors'] > 0:
             # only first error is collected
