@@ -41,10 +41,22 @@ class RethinkDBFilter(EnrichSignals, RethinkDBBase):
                 port=self.port(),
                 db=self.database_name(),
                 timeout=self.connect_timeout().total_seconds()) as conn:
-            cursor = rdb.db(self.database_name()).table(self.table()).\
-                filter(self.filter(signal)).run(conn)
+
+            # Query table configuration to get primary key
+            table_config = rdb.db(self.database_name()).table(self.table()).\
+                config()
+            primary_key = [table_config["primary_key"]]
+            filter_condition = self.filter(signal)
+
+            # Check if filter condition is only primary key, if so, use
+            # .get rather than .filter for better performance
+            if list(filter_condition.keys()) == primary_key:
+                cursor = rdb.db(self.database_name()).table(self.table()).\
+                    get(filter_condition).run(conn)
+            else:
+                cursor = rdb.db(self.database_name()).table(self.table()).\
+                    filter(self.filter(signal)).run(conn)
             results = list(cursor)
-            cursor.close()
         self.logger.debug(
             "Querying using filter {} return results {}".format(
                 self.filter(signal), results))
