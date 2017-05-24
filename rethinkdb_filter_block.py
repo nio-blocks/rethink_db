@@ -53,11 +53,10 @@ class RethinkDBFilter(EnrichSignals, RethinkDBBase):
             if list(filter_condition.keys()) == primary_key:
                 cursor = rdb.db(self.database_name()).table(self.table()).\
                     get(filter_condition).run(conn)
-                results = list(cursor)
             else:
                 cursor = rdb.db(self.database_name()).table(self.table()).\
                     filter(self.filter(signal)).run(conn)
-                results = list(cursor)
+            results = list(cursor)
         self.logger.debug(
             "Querying using filter {} return results {}".format(
                 self.filter(signal), results))
