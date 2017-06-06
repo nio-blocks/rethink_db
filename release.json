@@ -1,0 +1,12 @@
+{
+  "nio/RethinkDBChanges": {
+    "Version": "1.0.0",
+    "Language": "Python",
+    "Reference": "github.com/nio-blocks/rethink_db.git@v1.0.0"
+  },
+  "nio/RethinkDBUpdate": {
+    "Version": "1.0.0",
+    "Language": "Python",
+    "Reference": "github.com/nio-blocks/rethink_db.git@v1.0.0"
+  }
+}

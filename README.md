@@ -3,7 +3,8 @@
 Blocks for communicating with and monitoring a RethinkDB server.
 
 
-## RethinkDBChanges
+RethinkDBChanges
+=======
 
 Properties
 --------------
@@ -45,8 +46,10 @@ sample signal:
 }
 ```
 
+***
 
-## RethinkDBUpdate
+RethinkDBUpdate
+=======
 
 Properties
 --------------

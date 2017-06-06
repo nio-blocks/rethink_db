@@ -1,0 +1,87 @@
+{
+  "nio/RethinkDBChanges": {
+    "Dependencies": [
+      "-  rethinkdb"
+    ],
+    "Properties": {
+      "host": {
+        "description": "server host ip, defaults to env variable"
+      },
+      "port": {
+        "description": "server host port, defaults to env variable"
+      },
+      "table": {
+        "description": "name of the table to watch in the current database"
+      },
+      "connect_timeout": {
+        "description": "amount of time to wait to connect before dropping"
+      },
+      "database_name": {
+        "description": "name of database on the server"
+      }
+    },
+    "Commands": {
+      "List server databases": {
+        "description": "List all databases on the current connected server"
+      },
+      "Reconnect to server": {
+        "description": "Reconnects to the last connected RethinkDB server"
+      },
+      "List database tables": {
+        "description": "List all tables in the current database"
+      },
+      "Get server info": {
+        "description": "Gets information about the current connected RethinkDB server"
+      }
+    },
+    "Version": "1.0.0",
+    "Output": "Any changes that are pushed to the table that this block is watching.\nThis can be an insertion or update to a document in the table.\nsample signal:\n```\n{\n'new_val': {\n'id': 'f25e058d-8164-4f7d-9546-6b26944c9828',\n'test': 200,\n'job_number': 2,\n}\n}\n```",
+    "Description": "",
+    "Category": "Database",
+    "Input": "None"
+  },
+  "nio/RethinkDBUpdate": {
+    "Properties": {
+      "filters": {
+        "description": "control which documents are matched and updated based on these strings"
+      },
+      "port": {
+        "description": "server host port, defaults to env variable"
+      },
+      "connect_timeout": {
+        "description": "amount of time to wait to connect before dropping"
+      },
+      "host": {
+        "description": "server host ip, defaults to env variable"
+      },
+      "table": {
+        "description": "name of the table to watch in the current database"
+      },
+      "database_name": {
+        "description": "name of database on the server"
+      }
+    },
+    "Dependencies": [
+      "-  rethinkdb"
+    ],
+    "Commands": {
+      "List server databases": {
+        "description": "List all databases on the current connected server"
+      },
+      "Reconnect to server": {
+        "description": "Reconnects to the last connected RethinkDB server"
+      },
+      "List database tables": {
+        "description": "List all tables in the current database"
+      },
+      "Get server info": {
+        "description": "Gets information about the current connected RethinkDB server"
+      }
+    },
+    "Version": "1.0.0",
+    "Output": "The result of the update request to the server.\nsample signal:\n```\n{\n'errors': 0,\n'unchanged': 0,\n'inserted': 0,\n'skipped': 0,\n'deleted': 0,\n'replaced': 1\n}\n```",
+    "Description": "",
+    "Category": "Database",
+    "Input": "Any list of signals. This block expects incoming signals to have attributes\nthat are matched with filters and will exist in the table."
+  }
+}
