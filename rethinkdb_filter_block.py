@@ -44,7 +44,7 @@ class RethinkDBFilter(EnrichSignals, RethinkDBBase):
 
             # Query table configuration to get primary key
             table_config = rdb.db(self.database_name()).table(self.table()).\
-                config()
+                config().run(conn)
             primary_key = [table_config["primary_key"]]
             filter_condition = self.filter(signal)
 
@@ -55,7 +55,7 @@ class RethinkDBFilter(EnrichSignals, RethinkDBBase):
                     get(filter_condition).run(conn)
             else:
                 cursor = rdb.db(self.database_name()).table(self.table()).\
-                    filter(self.filter(signal)).run(conn)
+                    filter(filter_condition).run(conn)
             results = list(cursor)
         self.logger.debug(
             "Querying using filter {} return results {}".format(
