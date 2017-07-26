@@ -8,5 +8,20 @@
     "Version": "1.0.0",
     "Language": "Python",
     "Reference": "github.com/nio-blocks/rethink_db.git@v1.0.0"
+  },
+  "nio/RethinkDBDelete": {
+    "Version": "1.0.0",
+    "Language": "Python",
+    "Reference": "github.com/nio-blocks/rethink_db.git@v1.0.0"
+  },
+  "nio/RethinkDBFilter": {
+    "Version": "1.0.0",
+    "Language": "Python",
+    "Reference": "github.com/nio-blocks/rethink_db.git@v1.0.0"
+  },
+  "nio/RethinkDBInsert": {
+    "Version": "1.0.0",
+    "Language": "Python",
+    "Reference": "github.com/nio-blocks/rethink_db.git@v1.0.0"
   }
 }
