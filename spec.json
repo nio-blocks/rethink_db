@@ -85,5 +85,14 @@
             }
         },
         "Description": ""
+    },
+    "nio/RethinkDBDelete": {
+        "Category": "Database"
+    },
+    "nio/RethinkDBFilter": {
+        "Category": "Database"
+    },
+    "nio/RethinkDBInsert": {
+        "Category": "Database"
     }
 }
