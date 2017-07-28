@@ -164,7 +164,7 @@ class TestRethinkDBFilterBlock(NIOBlockTestCase):
         blk.start()
         with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.\
-                config.return_value = self.table_config
+                config.return_value.run.return_value = self.table_config
             mock_rdb.db.return_value.table.return_value.filter.return_value.\
                 run.return_value = [{"id": 8, 'test': 7, 'test1': 7},
                                     {'id': 8, 'test': 7, 'test2': 6},
@@ -189,7 +189,7 @@ class TestRethinkDBFilterBlock(NIOBlockTestCase):
         blk.start()
         with patch(blk.__module__ + '.rdb') as mock_rdb:
             mock_rdb.db.return_value.table.return_value.\
-                config.return_value = self.table_config
+                config.return_value.run.return_value = self.table_config
             mock_rdb.db.return_value.table.return_value.get.return_value.\
                 run.return_value = [{"id": 8, 'test': 7, 'test1': 7},
                                     {'id': 8, 'test': 7, 'test2': 6},
