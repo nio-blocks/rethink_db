@@ -1,98 +1,42 @@
 {
-    "nio/RethinkDBChanges": {
-        "Category": "Database",
-        "Commands": {
-            "Reconnect to server": {
-                "description": "Reconnects to the last connected RethinkDB server"
-            },
-            "Get server info": {
-                "description": "Gets information about the current connected RethinkDB server"
-            },
-            "List server databases": {
-                "description": "List all databases on the current connected server"
-            },
-            "List database tables": {
-                "description": "List all tables in the current database"
-            }
-        },
-        "Version": "1.0.0",
-        "Output": {
-            "Description": "Any changes that are pushed to the table that this block is watching.\nThis can be an insertion or update to a document in the table.\nsample signal:\n```\n{\n'new_val': {\n'id': 'f25e058d-8164-4f7d-9546-6b26944c9828',\n'test': 200,\n'job_number': 2,\n}\n}\n```"
-        },
-        "Input": {
-            "Description": "None"
-        },
-        "Properties": {
-            "port": {
-                "description": "server host port, defaults to env variable"
-            },
-            "table": {
-                "description": "name of the table to watch in the current database"
-            },
-            "host": {
-                "description": "server host ip, defaults to env variable"
-            },
-            "database_name": {
-                "description": "name of database on the server"
-            },
-            "connect_timeout": {
-                "description": "amount of time to wait to connect before dropping"
-            }
-        },
-        "Description": ""
-    },
-    "nio/RethinkDBUpdate": {
-        "Category": "Database",
-        "Commands": {
-            "Reconnect to server": {
-                "description": "Reconnects to the last connected RethinkDB server"
-            },
-            "Get server info": {
-                "description": "Gets information about the current connected RethinkDB server"
-            },
-            "List server databases": {
-                "description": "List all databases on the current connected server"
-            },
-            "List database tables": {
-                "description": "List all tables in the current database"
-            }
-        },
-        "Version": "1.0.0",
-        "Output": {
-            "Description": "The result of the update request to the server.\nsample signal:\n```\n{\n'errors': 0,\n'unchanged': 0,\n'inserted': 0,\n'skipped': 0,\n'deleted': 0,\n'replaced': 1\n}\n```"
-        },
-        "Input": {
-            "Description": "Any list of signals. This block expects incoming signals to have attributes\nthat are matched with filters and will exist in the table."
-        },
-        "Properties": {
-            "host": {
-                "description": "server host ip, defaults to env variable"
-            },
-            "database_name": {
-                "description": "name of database on the server"
-            },
-            "filters": {
-                "description": "control which documents are matched and updated based on these strings"
-            },
-            "table": {
-                "description": "name of the table to watch in the current database"
-            },
-            "port": {
-                "description": "server host port, defaults to env variable"
-            },
-            "connect_timeout": {
-                "description": "amount of time to wait to connect before dropping"
-            }
-        },
-        "Description": ""
-    },
-    "nio/RethinkDBDelete": {
-        "Category": "Database"
-    },
-    "nio/RethinkDBFilter": {
-        "Category": "Database"
-    },
-    "nio/RethinkDBInsert": {
-        "Category": "Database"
-    }
+  "nio/RethinkDBChanges": {
+    "version": "0.0.1",
+    "description": "",
+    "inputs": {},
+    "outputs": {},
+    "properties": {},
+    "commands": {}
+  },
+  "nio/RethinkDBDelete": {
+    "version": "0.0.1",
+    "description": "",
+    "inputs": {},
+    "outputs": {},
+    "properties": {},
+    "commands": {}
+  },
+  "nio/RethinkDBFilter": {
+    "version": "0.0.1",
+    "description": "",
+    "inputs": {},
+    "outputs": {},
+    "properties": {},
+    "commands": {}
+  },
+  "nio/RethinkDBInsert": {
+    "version": "0.0.1",
+    "description": "",
+    "inputs": {},
+    "outputs": {},
+    "properties": {},
+    "commands": {}
+  },
+  "nio/RethinkDBUpdate": {
+    "version": "0.0.1",
+    "description": "",
+    "inputs": {},
+    "outputs": {},
+    "properties": {},
+    "commands": {}
+  }
 }
