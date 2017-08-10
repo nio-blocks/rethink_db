@@ -1,42 +1,374 @@
 {
   "nio/RethinkDBChanges": {
-    "version": "0.0.1",
-    "description": "",
-    "inputs": {},
-    "outputs": {},
-    "properties": {},
+    "version": "1.0.0",
+    "description": "Monitor a specified channel and send a signal whenever a change occurs.  This can be an insertion or update to a document in the table.",
+    "properties": {
+      "connect_timeout": {
+        "title": "Connect timeout",
+        "type": "TimeDeltaType",
+        "description": "Amount of time to wait to connect before dropping.",
+        "default": {
+          "seconds": 20
+        }
+      },
+      "database_name": {
+        "title": "DB name",
+        "type": "StringType",
+        "description": "Name of database on the server.",
+        "default": "test"
+      },
+      "host": {
+        "title": "Host",
+        "type": "StringType",
+        "description": "Server host ip, defaults to env variable.",
+        "default": "[[RETHINKDB_HOST]]"
+      },
+      "port": {
+        "title": "Port",
+        "type": "IntType",
+        "description": "Server host port, defaults to env variable.",
+        "default": "[[RETHINKDB_PORT]]"
+      },
+      "retry_options": {
+        "title": "Retry Options",
+        "type": "ObjectType",
+        "description": "Configurables for retrying to connect to database",
+        "default": {
+          "max_retry": 5,
+          "multiplier": 1,
+          "strategy": "linear",
+          "indefinite": false
+        }
+      },
+      "table": {
+        "title": "Table to watch",
+        "type": "StringType",
+        "description": "Name of the table to watch in the current database.",
+        "default": "test"
+      }
+    },
+    "inputs": {
+      "defualt": {
+        "description": "Any list of signals."
+      }
+    },
+    "outputs": {
+      "default": {
+        "description": "A signal with any changes that are pushed to the table that this block is watching."
+      }
+    },
     "commands": {}
   },
   "nio/RethinkDBDelete": {
-    "version": "0.0.1",
-    "description": "",
-    "inputs": {},
-    "outputs": {},
-    "properties": {},
+    "version": "1.0.0",
+    "description": "Delete an entry in a Rethink Database table.",
+    "properties": {
+      "connect_timeout": {
+        "title": "Connect timeout",
+        "type": "TimeDeltaType",
+        "description": "Amount of time to wait to connect before dropping.",
+        "default": {
+          "seconds": 20
+        }
+      },
+      "database_name": {
+        "title": "DB name",
+        "type": "StringType",
+        "description": "Name of database on the server.",
+        "default": "test"
+      },
+      "enrich": {
+        "title": "Signal Enrichment",
+        "type": "ObjectType",
+        "description": "If true, include the original incoming signal in the output signal.",
+        "default": {
+          "enrich_field": "",
+          "exclude_existing": true
+        }
+      },
+      "filter": {
+        "title": "Filter by given fields",
+        "type": "Type",
+        "description": "Control which documents are matched and updated based on these strings.",
+        "default": "{{ $.to_dict() }}"
+      },
+      "host": {
+        "title": "Host",
+        "type": "StringType",
+        "description": "Server host ip, defaults to env variable.",
+        "default": "[[RETHINKDB_HOST]]"
+      },
+      "port": {
+        "title": "Port",
+        "type": "IntType",
+        "description": "Server host port, defaults to env variable.",
+        "default": "[[RETHINKDB_PORT]]"
+      },
+      "retry_options": {
+        "title": "Retry Options",
+        "type": "ObjectType",
+        "description": "Configurables for retrying to connect to database.",
+        "default": {
+          "max_retry": 5,
+          "multiplier": 1,
+          "strategy": "linear",
+          "indefinite": false
+        }
+      },
+      "table": {
+        "title": "Table to query",
+        "type": "StringType",
+        "description": "Name of the table to watch in the current database.",
+        "default": "test"
+      }
+    },
+    "inputs": {
+      "default": {
+        "description": "Any list of signals, the block expects an attribute to match the filters in the database"
+      }
+    },
+    "outputs": {
+      "default": {
+        "description": "The result of the delete request to the server."
+      }
+    },
     "commands": {}
   },
   "nio/RethinkDBFilter": {
-    "version": "0.0.1",
-    "description": "",
-    "inputs": {},
-    "outputs": {},
-    "properties": {},
+    "version": "1.0.0",
+    "description": "Query a Rethink Database table.",
+    "properties": {
+      "connect_timeout": {
+        "title": "Connect timeout",
+        "type": "TimeDeltaType",
+        "description": "Amount of time to wait to connect before dropping.",
+        "default": {
+          "seconds": 20
+        }
+      },
+      "database_name": {
+        "title": "DB name",
+        "type": "StringType",
+        "description": "Name of database on the server.",
+        "default": "test"
+      },
+      "enrich": {
+        "title": "Signal Enrichment",
+        "type": "ObjectType",
+        "description": "If true, include the original incoming signal in the output signal.",
+        "default": {
+          "enrich_field": "",
+          "exclude_existing": true
+        }
+      },
+      "filter": {
+        "title": "Filter by given fields",
+        "type": "Type",
+        "description": "Control which documents are matched and updated based on these strings.",
+        "default": "{{ $.to_dict() }}"
+      },
+      "host": {
+        "title": "Host",
+        "type": "StringType",
+        "description": "Server host ip, defaults to env variable.",
+        "default": "[[RETHINKDB_HOST]]"
+      },
+      "port": {
+        "title": "Port",
+        "type": "IntType",
+        "description": "Server host port, defaults to env variable.",
+        "default": "[[RETHINKDB_PORT]]"
+      },
+      "retry_options": {
+        "title": "Retry Options",
+        "type": "ObjectType",
+        "description": "Configurables for retrying to connect to database.",
+        "default": {
+          "max_retry": 5,
+          "multiplier": 1,
+          "strategy": "linear",
+          "indefinite": false
+        }
+      },
+      "table": {
+        "title": "Table to query",
+        "type": "StringType",
+        "description": "Name of the table to watch in the current database.",
+        "default": "test"
+      }
+    },
+    "inputs": {
+      "default": {
+        "description": "Any list of signals, the block expects an attribute to match the filters in the database"
+      }
+    },
+    "outputs": {
+      "default": {
+        "description": "The result of the filter request to the server."
+      }
+    },
     "commands": {}
   },
   "nio/RethinkDBInsert": {
-    "version": "0.0.1",
-    "description": "",
-    "inputs": {},
-    "outputs": {},
-    "properties": {},
+    "version": "1.0.0",
+    "description": "Insert an entry into a Rethink Database table.",
+    "properties": {
+      "conflict": {
+        "title": "Conflict behavior",
+        "type": "SelectType",
+        "description": "How the block should handle conflicting insert attempts",
+        "default": "error"
+      },
+      "connect_timeout": {
+        "title": "Connect timeout",
+        "type": "TimeDeltaType",
+        "description": "Amount of time to wait to connect before dropping.",
+        "default": {
+          "seconds": 20
+        }
+      },
+      "database_name": {
+        "title": "DB name",
+        "type": "StringType",
+        "description": "Name of database on the server.",
+        "default": "test"
+      },
+      "enrich": {
+        "title": "Signal Enrichment",
+        "type": "ObjectType",
+        "description": "If true, include the original incoming signal in the output signal.",
+        "default": {
+          "enrich_field": "",
+          "exclude_existing": true
+        }
+      },
+      "host": {
+        "title": "Host",
+        "type": "StringType",
+        "description": "Server host ip, defaults to env variable.",
+        "default": "[[RETHINKDB_HOST]]"
+      },
+      "object": {
+        "title": "Dictionary data to insert",
+        "type": "Type",
+        "description": "Data to insert into the database.",
+        "default": "{{ $.to_dict() }}"
+      },
+      "port": {
+        "title": "Port",
+        "type": "IntType",
+        "description": "Server host port, defaults to env variable.",
+        "default": "[[RETHINKDB_PORT]]"
+      },
+      "retry_options": {
+        "title": "Retry Options",
+        "type": "ObjectType",
+        "description": "Configurables for retrying to connect to database.",
+        "default": {
+          "max_retry": 5,
+          "multiplier": 1,
+          "strategy": "linear",
+          "indefinite": false
+        }
+      },
+      "table": {
+        "title": "Table to insert into",
+        "type": "StringType",
+        "description": "Name of the table to watch in the current database.",
+        "default": "test"
+      }
+    },
+    "inputs": {
+      "default": {
+        "description": "Any list of signals."
+      }
+    },
+    "outputs": {
+      "default": {
+        "description": "The result of the insert request to the server."
+      }
+    },
     "commands": {}
   },
   "nio/RethinkDBUpdate": {
-    "version": "0.0.1",
-    "description": "",
-    "inputs": {},
-    "outputs": {},
-    "properties": {},
+    "version": "1.0.0",
+    "description": "Update a Rethink Database table.",
+    "properties": {
+      "connect_timeout": {
+        "title": "Connect timeout",
+        "type": "TimeDeltaType",
+        "description": "Amount of time to wait to connect before dropping.",
+        "default": {
+          "seconds": 20
+        }
+      },
+      "database_name": {
+        "title": "DB name",
+        "type": "StringType",
+        "description": "Name of database on the server.",
+        "default": "test"
+      },
+      "enrich": {
+        "title": "Signal Enrichment",
+        "type": "ObjectType",
+        "description": "If true, include the original incoming signal in the output signal.",
+        "default": {
+          "enrich_field": "",
+          "exclude_existing": true
+        }
+      },
+      "filter": {
+        "title": "Filter dictionary",
+        "type": "Type",
+        "description": "Control which documents are matched and updated based on these strings.",
+        "default": "{{ $.to_dict() }}"
+      },
+      "host": {
+        "title": "Host",
+        "type": "StringType",
+        "description": "Server host ip, defaults to env variable.",
+        "default": "[[RETHINKDB_HOST]]"
+      },
+      "object": {
+        "title": "Dictionary data to update",
+        "type": "Type",
+        "description": "Data to replace what's previously in the database.",
+        "default": "{{ $.to_dict() }}"
+      },
+      "port": {
+        "title": "Port",
+        "type": "IntType",
+        "description": "Server host port, defaults to env variable.",
+        "default": "[[RETHINKDB_PORT]]"
+      },
+      "retry_options": {
+        "title": "Retry Options",
+        "type": "ObjectType",
+        "description": "Configurables for retrying to connect to database.",
+        "default": {
+          "max_retry": 5,
+          "multiplier": 1,
+          "strategy": "linear",
+          "indefinite": false
+        }
+      },
+      "table": {
+        "title": "Table to update",
+        "type": "StringType",
+        "description": "Name of the table to watch in the current database.",
+        "default": "test"
+      }
+    },
+    "inputs": {
+      "default": {
+        "description": "Any list of signals, the block expects an attribute to match the filters in the database"
+      }
+    },
+    "outputs": {
+      "default": {
+        "description": "The result of the update request to the server."
+      }
+    },
     "commands": {}
   }
 }

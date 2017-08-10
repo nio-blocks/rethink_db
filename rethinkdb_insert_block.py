@@ -1,8 +1,9 @@
 import rethinkdb as rdb
 from enum import Enum
+
 from nio.block.mixins import EnrichSignals
 from nio.properties import StringProperty, Property, SelectProperty
-from nio.util.discovery import discoverable
+
 from .rethinkdb_base_block import RethinkDBBase
 
 
@@ -12,7 +13,6 @@ class ConflictBehavior(Enum):
     update = 'update'
 
 
-@discoverable
 class RethinkDBInsert(EnrichSignals, RethinkDBBase):
 
     """a block for updating info in a RethinkDB table"""

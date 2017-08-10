@@ -1,6 +1,8 @@
 from unittest.mock import patch, MagicMock
+
 from nio.signal.base import Signal
 from nio.testing.block_test_case import NIOBlockTestCase
+
 from ..rethinkdb_changes_block import RethinkDBChanges
 from ..rethinkdb_update_block import RethinkDBUpdate
 from ..rethinkdb_delete_block import RethinkDBDelete
@@ -71,6 +73,7 @@ class TestRethinkDBChangesBlock(NIOBlockTestCase):
         self.feed_complete = Event()
         self.changes = [{"new_val": {"new": "thing"}},
                         {"new_val": {"another": "thing"}}]
+
         def change_feed(wait):
             if self.changes:
                 change = self.changes[0]

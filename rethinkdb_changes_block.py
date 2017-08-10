@@ -1,8 +1,10 @@
 import rethinkdb as rdb
 from rethinkdb.net import DefaultCursorEmpty
+
 from nio.properties import StringProperty
 from nio.signal.base import Signal
 from nio.util.threading import spawn
+
 from .rethinkdb_base_block import RethinkDBBase
 
 

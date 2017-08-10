@@ -1,11 +1,11 @@
 import rethinkdb as rdb
+
 from nio.block.mixins.enrich.enrich_signals import EnrichSignals
 from nio.properties import StringProperty, Property
-from nio.util.discovery import discoverable
+
 from .rethinkdb_base_block import RethinkDBBase
 
 
-@discoverable
 class RethinkDBFilter(EnrichSignals, RethinkDBBase):
 
     """a block for querying a rethinkdb table and adding results onto
