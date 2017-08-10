@@ -1,7 +1,8 @@
 import rethinkdb as rdb
+
 from nio.block.mixins.enrich.enrich_signals import EnrichSignals
 from nio.properties import StringProperty, PropertyHolder, Property
-from nio.util.discovery import discoverable
+
 from .rethinkdb_base_block import RethinkDBBase
 
 
@@ -9,7 +10,6 @@ class MatchItem(PropertyHolder):
     key = Property(title='Match key')
 
 
-@discoverable
 class RethinkDBUpdate(EnrichSignals, RethinkDBBase):
 
     """a block for updating info in a RethinkDB table"""

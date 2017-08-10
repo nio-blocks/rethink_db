@@ -1,11 +1,11 @@
 import rethinkdb as rdb
+
 from nio.block.mixins import EnrichSignals
 from nio.properties import StringProperty, Property
-from nio.util.discovery import discoverable
+
 from .rethinkdb_base_block import RethinkDBBase
 
 
-@discoverable
 class RethinkDBDelete(EnrichSignals, RethinkDBBase):
 
     """a block for deleting one or more documents from a rethinkdb table"""

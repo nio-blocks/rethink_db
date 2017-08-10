@@ -1,94 +1,168 @@
-# RethinkDB 
-
-Blocks for communicating with and monitoring a RethinkDB server.
-
-
 RethinkDBChanges
-=======
+================
+Monitor a specified channel and send a signal whenever a change occurs.  This can be an insertion or update to a document in the table.
 
 Properties
---------------
--  table: name of the table to watch in the current database
--  host: server host ip, defaults to env variable
--  port: server host port, defaults to env variable
--  database_name: name of database on the server
--  connect_timeout: amount of time to wait to connect before dropping
+----------
+- **connect_timeout**: Amount of time to wait to connect before dropping.
+- **database_name**: Name of database on the server.
+- **host**: Server host ip, defaults to env variable.
+- **port**: Server host port, defaults to env variable.
+- **retry_options**: Configurables for retrying to connect to database
+- **table**: Name of the table to watch in the current database.
 
-Dependencies
-----------------
--  rethinkdb
+Inputs
+------
+- **defualt**: Any list of signals.
+
+Outputs
+-------
+- **default**: A signal with any changes that are pushed to the table that this block is watching.
 
 Commands
-----------------
--  Get server info: Gets information about the current connected RethinkDB server
--  Reconnect to server: Reconnects to the last connected RethinkDB server
--  List server databases: List all databases on the current connected server
--  List database tables: List all tables in the current database
+--------
 
-Input
--------
-None
+Dependencies
+------------
+-  rethinkdb
 
-Output
----------
-Any changes that are pushed to the table that this block is watching. 
+Output Example
+--------------
+Any changes that are pushed to the table that this block is watching.
 This can be an insertion or update to a document in the table.
-
-sample signal: 
-
+sample signal:
 ```
 {
   'new_val': {
       'id': 'f25e058d-8164-4f7d-9546-6b26944c9828',
       'test': 200,
-      'job_number': 2, 
+      'job_number': 2,
       }
 }
 ```
 
-***
-
-RethinkDBUpdate
-=======
+RethinkDBDelete
+===============
+Delete an entry in a Rethink Database table.
 
 Properties
---------------
--  table: name of the table to watch in the current database
--  host: server host ip, defaults to env variable
--  port: server host port, defaults to env variable
--  database_name: name of database on the server
--  connect_timeout: amount of time to wait to connect before dropping
--  filters: control which documents are matched and updated based on these strings
+----------
+- **connect_timeout**: Amount of time to wait to connect before dropping.
+- **database_name**: Name of database on the server.
+- **enrich**: If true, include the original incoming signal in the output signal.
+- **filter**: Control which documents are matched and updated based on these strings.
+- **host**: Server host ip, defaults to env variable.
+- **port**: Server host port, defaults to env variable.
+- **retry_options**: Configurables for retrying to connect to database.
+- **table**: Name of the table to watch in the current database.
 
-Dependencies
-----------------
--  rethinkdb
+Inputs
+------
+- **default**: Any list of signals, the block expects an attribute to match the filters in the database
+
+Outputs
+-------
+- **default**: The result of the delete request to the server.  See example below.
 
 Commands
-----------------
--  Get server info: Gets information about the current connected RethinkDB server
--  Reconnect to server: Reconnects to the last connected RethinkDB server
--  List server databases: List all databases on the current connected server
--  List database tables: List all tables in the current database
+--------
 
-Input
+RethinkDBFilter
+===============
+Query a Rethink Database table.
+
+Properties
+----------
+- **connect_timeout**: Amount of time to wait to connect before dropping.
+- **database_name**: Name of database on the server.
+- **enrich**: If true, include the original incoming signal in the output signal.
+- **filter**: Control which documents are matched and updated based on these strings.
+- **host**: Server host ip, defaults to env variable.
+- **port**: Server host port, defaults to env variable.
+- **retry_options**: Configurables for retrying to connect to database.
+- **table**: Name of the table to watch in the current database.
+
+Inputs
+------
+- **default**: Any list of signals, the block expects an attribute to match the filters in the database
+
+Outputs
 -------
-Any list of signals. This block expects incoming signals to have attributes
-that are matched with filters and will exist in the table. 
+- **default**: The result of the filter request to the server.
 
-Output
----------
-The result of the update request to the server. 
+Commands
+--------
 
-sample signal: 
+RethinkDBInsert
+===============
+Insert an entry into a Rethink Database table.
 
+Properties
+----------
+- **conflict**: How the block should handle conflicting insert attempts
+- **connect_timeout**: Amount of time to wait to connect before dropping.
+- **database_name**: Name of database on the server.
+- **enrich**: If true, include the original incoming signal in the output signal.
+- **host**: Server host ip, defaults to env variable.
+- **object**: Data to insert into the database.
+- **port**: Server host port, defaults to env variable.
+- **retry_options**: Configurables for retrying to connect to database.
+- **table**: Name of the table to watch in the current database.
+
+Inputs
+------
+- **default**: Any list of signals.
+
+Outputs
+-------
+- **default**: The result of the insert request to the server.  See example below.
+
+Commands
+--------
+
+RethinkDBUpdate
+===============
+Update a Rethink Database table.
+
+Properties
+----------
+- **connect_timeout**: Amount of time to wait to connect before dropping.
+- **database_name**: Name of database on the server.
+- **enrich**: If true, include the original incoming signal in the output signal.
+- **filter**: Control which documents are matched and updated based on these strings.
+- **host**: Server host ip, defaults to env variable.
+- **object**: Data to replace what's previously in the database.
+- **port**: Server host port, defaults to env variable.
+- **retry_options**: Configurables for retrying to connect to database.
+- **table**: Name of the table to watch in the current database.
+
+Inputs
+------
+- **default**: Any list of signals, the block expects an attribute to match the filters in the database
+
+Outputs
+-------
+- **default**: The result of the update request to the server.  See example below.
+
+Commands
+--------
+
+Dependencies
+------------
+-  rethinkdb
+
+Output Example
+--------------
+The result of the update request to the server.
+sample signal:
 ```
 {
   'errors': 0,
-  'unchanged': 0, 
+  'unchanged': 0,
   'inserted': 0,
-  'skipped': 0, 
+  'skipped': 0,
   'deleted': 0,
   'replaced': 1
 }
 ```
+
