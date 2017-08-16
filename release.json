@@ -1,27 +1,27 @@
 {
   "nio/RethinkDBChanges": {
     "language": "Python",
-    "reference": "git@github.com:nio-blocks/rethink_db.git@v1.0.0",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "url": "git://github.com/nio-blocks/rethink_db.git"
   },
   "nio/RethinkDBDelete": {
     "language": "Python",
-    "reference": "git@github.com:nio-blocks/rethink_db.git@v1.0.0",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "url": "git://github.com/nio-blocks/rethink_db.git"
   },
   "nio/RethinkDBFilter": {
     "language": "Python",
-    "reference": "git@github.com:nio-blocks/rethink_db.git@v1.0.0",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "url": "git://github.com/nio-blocks/rethink_db.git"
   },
   "nio/RethinkDBInsert": {
     "language": "Python",
-    "reference": "git@github.com:nio-blocks/rethink_db.git@v1.0.0",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "url": "git://github.com/nio-blocks/rethink_db.git"
   },
   "nio/RethinkDBUpdate": {
     "language": "Python",
-    "reference": "git@github.com:nio-blocks/rethink_db.git@v1.0.0",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "url": "git://github.com/nio-blocks/rethink_db.git"
   }
 }
