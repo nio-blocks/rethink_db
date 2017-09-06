@@ -2,6 +2,9 @@
   "nio/RethinkDBChanges": {
     "version": "1.0.0",
     "description": "Monitor a specified channel and send a signal whenever a change occurs.  This can be an insertion or update to a document in the table.",
+    "categories": [
+      "Database"
+    ],
     "properties": {
       "connect_timeout": {
         "title": "Connect timeout",
@@ -62,6 +65,9 @@
   "nio/RethinkDBDelete": {
     "version": "1.0.0",
     "description": "Delete an entry in a Rethink Database table.",
+    "categories": [
+      "Database"
+    ],
     "properties": {
       "connect_timeout": {
         "title": "Connect timeout",
@@ -137,6 +143,9 @@
   "nio/RethinkDBFilter": {
     "version": "1.0.0",
     "description": "Query a Rethink Database table.",
+    "categories": [
+      "Database"
+    ],
     "properties": {
       "connect_timeout": {
         "title": "Connect timeout",
@@ -212,6 +221,9 @@
   "nio/RethinkDBInsert": {
     "version": "1.0.0",
     "description": "Insert an entry into a Rethink Database table.",
+    "categories": [
+      "Database"
+    ],
     "properties": {
       "conflict": {
         "title": "Conflict behavior",
@@ -293,6 +305,9 @@
   "nio/RethinkDBUpdate": {
     "version": "1.0.0",
     "description": "Update a Rethink Database table.",
+    "categories": [
+      "Database"
+    ],
     "properties": {
       "connect_timeout": {
         "title": "Connect timeout",
