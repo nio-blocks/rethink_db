@@ -1,7 +1,7 @@
 {
   "nio/RethinkDBChanges": {
     "version": "1.0.0",
-    "description": "Monitor a specified channel and send a signal whenever a change occurs.  This can be an insertion or update to a document in the table.",
+    "description": "In a RethinkDB, monitor a specified channel and send a signal whenever a change occurs. This can be an insertion or update to a document in the table.",
     "categories": [
       "Database"
     ],
@@ -9,7 +9,7 @@
       "connect_timeout": {
         "title": "Connect timeout",
         "type": "TimeDeltaType",
-        "description": "Amount of time to wait to connect before dropping.",
+        "description": "Timeout period in seconds for the connection to be opened.",
         "default": {
           "seconds": 20
         }
@@ -23,13 +23,13 @@
       "host": {
         "title": "Host",
         "type": "StringType",
-        "description": "Server host ip, defaults to env variable.",
+        "description": "Server host IP defaults to environment variable.",
         "default": "[[RETHINKDB_HOST]]"
       },
       "port": {
         "title": "Port",
         "type": "IntType",
-        "description": "Server host port, defaults to env variable.",
+        "description": "Server host port, defaults to environment variable.",
         "default": "[[RETHINKDB_PORT]]"
       },
       "retry_options": {
@@ -72,7 +72,7 @@
       "connect_timeout": {
         "title": "Connect timeout",
         "type": "TimeDeltaType",
-        "description": "Amount of time to wait to connect before dropping.",
+        "description": "Timeout period in seconds for the connection to be opened.",
         "default": {
           "seconds": 20
         }
@@ -86,7 +86,7 @@
       "enrich": {
         "title": "Signal Enrichment",
         "type": "ObjectType",
-        "description": "If true, include the original incoming signal in the output signal.",
+        "description": "If `true`, include the original incoming signal in the output signal.",
         "default": {
           "enrich_field": "",
           "exclude_existing": true
@@ -101,13 +101,13 @@
       "host": {
         "title": "Host",
         "type": "StringType",
-        "description": "Server host ip, defaults to env variable.",
+        "description": "Server host IP, defaults to environment variable.",
         "default": "[[RETHINKDB_HOST]]"
       },
       "port": {
         "title": "Port",
         "type": "IntType",
-        "description": "Server host port, defaults to env variable.",
+        "description": "Server host port, defaults to environment variable.",
         "default": "[[RETHINKDB_PORT]]"
       },
       "retry_options": {
@@ -130,7 +130,7 @@
     },
     "inputs": {
       "default": {
-        "description": "Any list of signals, the block expects an attribute to match the filters in the database"
+        "description": "Any list of signals. The block expects an attribute to match the filters in the database."
       }
     },
     "outputs": {
@@ -150,7 +150,7 @@
       "connect_timeout": {
         "title": "Connect timeout",
         "type": "TimeDeltaType",
-        "description": "Amount of time to wait to connect before dropping.",
+        "description": "Timeout period in seconds for the connection to be opened.",
         "default": {
           "seconds": 20
         }
@@ -164,7 +164,7 @@
       "enrich": {
         "title": "Signal Enrichment",
         "type": "ObjectType",
-        "description": "If true, include the original incoming signal in the output signal.",
+        "description": "If `true`, include the original incoming signal in the output signal.",
         "default": {
           "enrich_field": "",
           "exclude_existing": true
@@ -179,13 +179,13 @@
       "host": {
         "title": "Host",
         "type": "StringType",
-        "description": "Server host ip, defaults to env variable.",
+        "description": "Server host IP, defaults to environment variable.",
         "default": "[[RETHINKDB_HOST]]"
       },
       "port": {
         "title": "Port",
         "type": "IntType",
-        "description": "Server host port, defaults to env variable.",
+        "description": "Server host port, defaults to environment variable.",
         "default": "[[RETHINKDB_PORT]]"
       },
       "retry_options": {
@@ -208,7 +208,7 @@
     },
     "inputs": {
       "default": {
-        "description": "Any list of signals, the block expects an attribute to match the filters in the database"
+        "description": "Any list of signals. The block expects an attribute to match the filters in the database."
       }
     },
     "outputs": {
@@ -228,13 +228,13 @@
       "conflict": {
         "title": "Conflict behavior",
         "type": "SelectType",
-        "description": "How the block should handle conflicting insert attempts",
+        "description": "How the block should handle conflicting insert attempts.",
         "default": "error"
       },
       "connect_timeout": {
         "title": "Connect timeout",
         "type": "TimeDeltaType",
-        "description": "Amount of time to wait to connect before dropping.",
+        "description": "Timeout period in seconds for the connection to be opened.",
         "default": {
           "seconds": 20
         }
@@ -248,7 +248,7 @@
       "enrich": {
         "title": "Signal Enrichment",
         "type": "ObjectType",
-        "description": "If true, include the original incoming signal in the output signal.",
+        "description": "If `true`, include the original incoming signal in the output signal.",
         "default": {
           "enrich_field": "",
           "exclude_existing": true
@@ -257,7 +257,7 @@
       "host": {
         "title": "Host",
         "type": "StringType",
-        "description": "Server host ip, defaults to env variable.",
+        "description": "Server host IP, defaults to environment variable.",
         "default": "[[RETHINKDB_HOST]]"
       },
       "object": {
@@ -269,7 +269,7 @@
       "port": {
         "title": "Port",
         "type": "IntType",
-        "description": "Server host port, defaults to env variable.",
+        "description": "Server host port, defaults to environment variable.",
         "default": "[[RETHINKDB_PORT]]"
       },
       "retry_options": {
@@ -312,7 +312,7 @@
       "connect_timeout": {
         "title": "Connect timeout",
         "type": "TimeDeltaType",
-        "description": "Amount of time to wait to connect before dropping.",
+        "description": "Timeout period in seconds for the connection to be opened.",
         "default": {
           "seconds": 20
         }
@@ -326,7 +326,7 @@
       "enrich": {
         "title": "Signal Enrichment",
         "type": "ObjectType",
-        "description": "If true, include the original incoming signal in the output signal.",
+        "description": "If `true`, include the original incoming signal in the output signal.",
         "default": {
           "enrich_field": "",
           "exclude_existing": true
@@ -341,7 +341,7 @@
       "host": {
         "title": "Host",
         "type": "StringType",
-        "description": "Server host ip, defaults to env variable.",
+        "description": "Server host IP, defaults to environment variable.",
         "default": "[[RETHINKDB_HOST]]"
       },
       "object": {
@@ -353,7 +353,7 @@
       "port": {
         "title": "Port",
         "type": "IntType",
-        "description": "Server host port, defaults to env variable.",
+        "description": "Server host port, defaults to environment variable.",
         "default": "[[RETHINKDB_PORT]]"
       },
       "retry_options": {
@@ -376,7 +376,7 @@
     },
     "inputs": {
       "default": {
-        "description": "Any list of signals, the block expects an attribute to match the filters in the database"
+        "description": "Any list of signals. The block expects an attribute to match the filters in the database."
       }
     },
     "outputs": {
